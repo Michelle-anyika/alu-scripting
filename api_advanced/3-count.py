@@ -69,4 +69,3 @@ def count_words(subreddit, word_list, hot_list=None, after=None, word_count=None
 
     except requests.RequestException:
         return
-

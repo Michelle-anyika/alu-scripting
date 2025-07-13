@@ -50,4 +50,3 @@ def recurse(subreddit, hot_list=None, after=None):
         return hot_list
     except requests.RequestException:
         return None
-
