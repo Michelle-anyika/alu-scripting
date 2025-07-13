@@ -1,34 +1,21 @@
 #!/usr/bin/python3
-"""Query the Reddit API and print titles of top 10 hot posts for a subreddit."""
-
+"""Query Reddit API for top 10 hot posts in a subreddit."""
 import requests
 
 
 def top_ten(subreddit):
-    """
-    Prints the titles of the first 10 hot posts for a given subreddit.
+    """Print the titles of the first 10 hot posts for a subreddit."""
+    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
+    headers = {'User-Agent': 'linux:alu-api-advanced:v1.0 (by /u/Anonymous)'}
 
-    If the subreddit is invalid or an error occurs, prints nothing.
-    """
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    headers = {"User-Agent": "Custom-Agent/1.0"}
-    params = {"limit": 10}
-
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-
-    if response.status_code != 200:
-        return
-
-    data = response.json().get("data")
-    if not data:
-        return
-
-    posts = data.get("children")
-    if not posts:
-        return
-
-    for post in posts:
-        title = post.get("data", {}).get("title")
-        if title:
-            print(title)
+    response = requests.get(url, headers=headers, allow_redirects=False, timeout=5)
+    
+    if response.status_code == 200:
+        try:
+            posts = response.json()['data']['children']
+            for post in posts[:10]:
+                print(post['data']['title'])
+        except (KeyError, ValueError):
+            print(None)
+    else:
+        print(None)
